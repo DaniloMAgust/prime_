@@ -1,0 +1,168 @@
+import json
+
+import requests
+# Extrai informacoes do banco de dados em json
+dados = requests.get("https://storage.googleapis.com/processos_seletivos/raccoon_backoffice_ti_clt_2021_dezembro.json")
+banco_dados = dados.json()
+
+
+def validacpf():
+
+    """Valida os dados do CPF e conta quantos CPFs sao validos"""
+    x = 0
+    count = 0
+    while x<len(banco_dados):
+        func = banco_dados[x]
+        cpf = func['cpf']
+        cpf = cpf.replace('.','')
+        cpf = cpf.replace('-', '')
+        valid1 = int(cpf[0])*1+int(cpf[1])*2+int(cpf[2])*3+int(cpf[3])*4+int(cpf[4])*5+int(cpf[5])*6+int(cpf[6])*7+int(cpf[7])*8+int(cpf[8])*9
+        valid11 = int(valid1) % 11
+        valid2 = int(cpf[0])*0+int(cpf[1])*1+int(cpf[2])*2+int(cpf[3])*3+int(cpf[4])*4+int(cpf[5])*5+int(cpf[6])*6+int(cpf[7])*7+int(cpf[8])*8+int(cpf[9])*9
+        valid22 = int(valid2) % 11
+        x = x + 1
+
+        if valid11 == 10:
+            valid11 = 0
+        if valid22 == 10:
+            valid22 = 0
+        if int(cpf[9]) == valid11 and int(cpf[10]) == valid22:
+            count =count + 1
+
+    print(count)
+
+def cadastrouf():
+    """
+    retorna a federacao que o cpf foi cadastrado
+    """
+    x=0
+    uf = []
+    while x < len(banco_dados):
+        func = banco_dados[x]
+        cpf = func['cpf']
+        x = x + 1
+        if int(cpf[10]) == 0:
+            uuf = 'rs'
+        elif int(cpf[10]) == 1:
+            uuf = 'df, go, mt, ms, to'
+        elif int(cpf[10]) == 2:
+            uuf = 'am, pa, ro, ap, ac, ro'
+        elif int(cpf[10]) == 3:
+            uuf = 'ce, ma, pi'
+        elif int(cpf[10]) == 4:
+            uuf = 'pr, pe, al, rn'
+        elif int(cpf[10]) == 5:
+            uuf = 'ba, se'
+        elif int(cpf[10]) == 6:
+            uuf = 'mg'
+        elif int(cpf[10]) == 7:
+            uuf = 'rj, es'
+        elif int(cpf[10]) == 8:
+            uuf = 'sp'
+        elif int(cpf[10]) == 9:
+            uuf = 'pr, sc'
+        func['uf'] = uuf
+        uf.append(uuf)
+        resp1 = 'cpf -> '+ func['cpf'] + '     uf -> ' + func['uf']
+        print(resp1)
+
+def maiorsalario():
+    """
+    retona o segundo maior salario da lista
+
+    """
+    x=0
+    dindin = []
+    nome = []
+    while x < len(banco_dados):
+        func = banco_dados[x]
+        dindin.append(func['salario'])
+        nome.append(func['nome'])
+        x+=1
+    dindinmax = max(dindin)
+    dindin2max = 0
+    for x in dindin:
+        if x>dindin2max and x<dindinmax:
+            dindin2max = x
+    ind = dindin.index(dindin2max)
+    print(nome[ind])
+
+
+def somasalario():
+    """
+    retona a soma do salario de todos da lista
+    """
+    x=0
+    dindin = []
+    while x < len(banco_dados):
+        func = banco_dados[x]
+        dindin.append(func['salario'])
+        x+=1
+    tamanho = len(dindin)
+    somasala = 0
+    for y in range(tamanho):
+        somasala += dindin[y]
+    print(somasala)
+
+def bruce():
+    """
+    Encontra o Bruce Wane na lista e retorn seu salario e cpf
+    """
+    dindin = []
+    nome = []
+    cpf = []
+    x=0
+    while x < len(banco_dados):
+        func = banco_dados[x]
+        dindin.append(func['salario'])
+        nome.append(func['nome'])
+        cpf.append(func['cpf'])
+        x+=1
+
+    ind = nome.index('Bruce Wayne')
+    res = 'salario -> '+ str(dindin[ind]) + '     cpf -> ' + str(cpf[ind])
+    print(res)
+
+def cordsol():
+    """
+    Mostra os dados de todos os coordenadores solteiros (nome e cpf)
+    """
+    print('[')
+    x=0
+    y=0
+    coord = 'COORDENADOR'
+    civil = 'SOLTEIRO'
+    lista = []
+    nome = []
+    cpf = []
+    estado_civil = []
+    cargo = []
+    while x < len(banco_dados):
+        func = banco_dados[x]
+        cargo.append(func['cargo'])
+        estado_civil.append(func['estado_civil'])
+        nome.append(func['nome'])
+        cpf.append(func['cpf'])
+        x+=1
+    x=0
+    lista = []
+    for x in range(len(cargo)):
+        if 'COORDENADOR' in cargo[x]:
+            lista.append(x)
+    print(lista)
+    y=0
+    lista1 = []
+    for y in range(len(estado_civil)):
+            if 'SOLTEIRO' in estado_civil[y]:
+                lista1.append(y)
+    print(lista1)
+    listafin = []
+    for w in lista:
+        if w in lista1:
+            listafin.append(w)
+            print(' {')
+            print(f"    'nome' : {banco_dados[w]['nome']},")
+            print(f"    'cpf' : {banco_dados[w]['cpf']}")
+            print(' },')
+    print(']')
+
