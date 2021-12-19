@@ -5,6 +5,12 @@ import requests
 dados = requests.get("https://storage.googleapis.com/processos_seletivos/raccoon_backoffice_ti_clt_2021_dezembro.json")
 banco_dados = dados.json()
 
+#cpf = validacpf()
+#uf = cadastrouf()
+#ryca = maiorsalario()
+#payroll = somasalario()
+#stalker = cordsol()
+#batman = bruce()
 
 def validacpf():
 
